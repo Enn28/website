@@ -1,10 +1,943 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My First Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zion Gardens Resort Soy | Luxury & Nature in Eldoret</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            --clr-primary: #1b4332;      /* Deep Forest Green */
+            --clr-secondary: #2d6a4f;    /* Lighter Green */
+            --clr-accent: #c5a059;       /* Muted Gold */
+            --clr-bg: #faf8f5;           /* Creamy White */
+            --clr-text: #333333;         /* Dark Grey */
+            --clr-text-light: #777777;   /* Light Grey */
+            --ff-heading: 'Playfair Display', serif;
+            --ff-body: 'Lato', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--ff-body);
+            background-color: var(--clr-bg);
+            color: var(--clr-text);
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           REUSABLE CLASSES
+           ========================================= */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-family: var(--ff-heading);
+            font-size: 2.8rem;
+            color: var(--clr-primary);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--clr-text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 4rem auto;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo {
+            font-family: var(--ff-heading);
+            font-size: 1.8rem;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled .logo {
+            color: var(--clr-primary);
+        }
+
+        .navbar .logo span {
+            color: var(--clr-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .navbar.scrolled .nav-links a {
+            color: var(--clr-text);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--clr-accent);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .book-nav-btn {
+            background: var(--clr-accent);
+            color: white !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .book-nav-btn:hover {
+            background: #b58d3e;
+            transform: translateY(-2px);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled .menu-toggle span {
+            background: var(--clr-primary);
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(27, 67, 50, 0.4), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-tagline {
+            font-family: var(--ff-body);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--clr-accent);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            border-bottom: 1px solid var(--clr-accent);
+            padding-bottom: 0.5rem;
+        }
+
+        .hero h1 {
+            font-family: var(--ff-heading);
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--clr-accent);
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 2px solid var(--clr-accent);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* =========================================
+           ABOUT / INTRO
+           ========================================= */
+        .about {
+            padding: 6rem 0;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-img {
+            position: relative;
+            height: 500px;
+        }
+
+        .about-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .about-img::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 200px;
+            height: 200px;
+            border-bottom: 4px solid var(--clr-accent);
+            border-right: 4px solid var(--clr-accent);
+            border-radius: 0 0 8px 0;
+            z-index: -1;
+        }
+
+        .about-content h3 {
+            font-family: var(--ff-heading);
+            font-size: 2.2rem;
+            color: var(--clr-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-content p {
+            margin-bottom: 1.5rem;
+            color: var(--clr-text-light);
+        }
+
+        .about-features {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .about-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--clr-primary);
+        }
+
+        /* =========================================
+           AMENITIES
+           ========================================= */
+        .amenities {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .amenity-card {
+            background: var(--clr-bg);
+            padding: 2.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .amenity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--clr-accent);
+        }
+
+        .amenity-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(197, 160, 89, 0.1);
+            color: var(--clr-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem auto;
+            transition: var(--transition);
+        }
+
+        .amenity-card:hover .amenity-icon {
+            background: var(--clr-accent);
+            color: white;
+        }
+
+        .amenity-card h4 {
+            font-family: var(--ff-heading);
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--clr-primary);
+        }
+
+        .amenity-card p {
+            font-size: 0.9rem;
+            color: var(--clr-text-light);
+        }
+
+        /* =========================================
+           ACCOMMODATION
+           ========================================= */
+        .rooms {
+            padding: 6rem 0;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .room-img {
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .room-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .room-card:hover .room-img img {
+            transform: scale(1.05);
+        }
+
+        .room-content {
+            padding: 2rem;
+        }
+
+        .room-price {
+            color: var(--clr-accent);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-price span {
+            font-size: 0.9rem;
+            color: var(--clr-text-light);
+            font-weight: 400;
+        }
+
+        .room-content h4 {
+            font-family: var(--ff-heading);
+            font-size: 1.5rem;
+            color: var(--clr-primary);
+            margin-bottom: 1rem;
+        }
+
+        .room-features {
+            display: flex;
+            gap: 1rem;
+            color: var(--clr-text-light);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            border: 2px solid var(--clr-primary);
+            color: var(--clr-primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: var(--clr-primary);
+            color: white;
+        }
+
+        /* =========================================
+           CTA / CONTACT
+           ========================================= */
+        .cta {
+            padding: 8rem 0;
+            background: linear-gradient(rgba(27, 67, 50, 0.9), rgba(27, 67, 50, 0.9)), 
+                        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop') center/cover fixed;
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-family: var(--ff-heading);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--clr-accent);
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        footer {
+            background: #111;
+            color: white;
+            padding: 4rem 0 2rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-family: var(--ff-heading);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-logo span {
+            color: var(--clr-accent);
+        }
+
+        .footer-text {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .socials {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .socials a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .socials a:hover {
+            background: var(--clr-accent);
+            border-color: var(--clr-accent);
+        }
+
+        .footer-links h4 {
+            margin-bottom: 1.5rem;
+            color: var(--clr-accent);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #222;
+            padding-top: 2rem;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        /* =========================================
+           MOBILE RESPONSIVENESS
+           ========================================= */
+        @media (max-width: 900px) {
+            .section-title { font-size: 2.2rem; }
+            .hero h1 { font-size: 3rem; }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .about-img {
+                height: 300px;
+            }
+
+            .about-img::after {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--clr-primary);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                color: white !important;
+                font-size: 1.2rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .about-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>This is my first website.</p>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar" id="navbar">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <a href="#" class="logo">Zion <span>Gardens</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#amenities">Amenities</a></li>
+                <li><a href="#rooms">Accommodation</a></li>
+                <li><a href="#contact" class="book-nav-btn">Book Now</a></li>
+            </ul>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <span class="hero-tagline">Resort & Leisure Garden</span>
+            <h1>Escape to Nature's Embrace</h1>
+            <p>Experience VIP accommodation, lush leisure gardens, and serene tranquility in the heart of Soy, Eldoret. Your perfect getaway awaits.</p>
+            <a href="#rooms" class="btn-primary">Explore Rooms</a>
+        </div>
+    </header>
+
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-img reveal">
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop" alt="Zion Gardens Room">
+                </div>
+                <div class="about-content reveal">
+                    <h3>A Hidden Gem in Kakamega County</h3>
+                    <p>Nestled along Forest Road in Soy, Zion Gardens offers a perfect blend of nature and luxury. Whether you are hosting a grand event, seeking a weekend retreat, or planning a corporate conference, our lush grounds and VIP accommodations provide the ideal setting.</p>
+                    <p>Wake up to the sounds of nature, take a dip in our outdoor pool, and end your day with exquisite dining at our restaurant. At Zion Gardens, every moment is curated for your relaxation.</p>
+                    <div class="about-features">
+                        <div class="about-feature-item">
+                            <i class="fas fa-star" style="color: var(--clr-accent)"></i> 4.3 Rated on Google
+                        </div>
+                        <div class="about-feature-item">
+                            <i class="fas fa-users" style="color: var(--clr-accent)"></i> 93+ Excellent Reviews
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AMENITIES SECTION -->
+    <section class="amenities" id="amenities">
+        <div class="container">
+            <h2 class="section-title reveal">Resort Amenities</h2>
+            <p class="section-subtitle reveal">Everything you need for a perfect stay, all in one place.</p>
+            
+            <div class="amenities-grid">
+                <div class="amenity-card reveal">
+                    <div class="amenity-icon"><i class="fas fa-swimming-pool"></i></div>
+                    <h4>Outdoor Pool</h4>
+                    <p>Take a refreshing dip in our crystal-clear outdoor swimming pool, perfect for the whole family.</p>
+                </div>
+                <div class="amenity-card reveal">
+                    <div class="amenity-icon"><i class="fas fa-utensils"></i></div>
+                    <h4>Restaurant</h4>
+                    <p>Savor local and international cuisine prepared by our top-tier culinary experts daily.</p>
+                </div>
+                <div class="amenity-card reveal">
+                    <div class="amenity-icon"><i class="fas fa-cocktail"></i></div>
+                    <h4>Leisure Garden</h4>
+                    <p>Relax in our beautifully manicured gardens, ideal for quiet afternoons and evening walks.</p>
+                </div>
+                <div class="amenity-card reveal">
+                    <div class="amenity-icon"><i class="fas fa-users"></i></div>
+                    <h4>Conference Room</h4>
+                    <p>State-of-the-art facilities for your corporate events, seminars, and workshops.</p>
+                </div>
+                <div class="amenity-card reveal">
+                    <div class="amenity-icon"><i class="fas fa-child"></i></div>
+                    <h4>Playground</h4>
+                    <p>A safe and fun environment to keep the little ones entertained throughout their stay.</p>
+                </div>
+                <div class="amenity-card reveal">
+                    <div class="amenity-icon"><i class="fas fa-parking"></i></div>
+                    <h4>Ample Parking</h4>
+                    <p>Secure and spacious parking available for all guests and event attendees.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACCOMMODATION SECTION -->
+    <section class="rooms" id="rooms">
+        <div class="container">
+            <h2 class="section-title reveal">VIP Accommodation</h2>
+            <p class="section-subtitle reveal">Luxurious rooms featuring Smart TVs, free WiFi, and daily housekeeping.</p>
+            
+            <div class="rooms-grid">
+                <div class="room-card reveal">
+                    <div class="room-img">
+                        <img src="https://images.unsplash.com/photo-1590490360182-c33d955f4e24?q=80&w=2070&auto=format&fit=crop" alt="Standard Room">
+                    </div>
+                    <div class="room-content">
+                        <div class="room-price">Ksh 9,260 <span>/ night</span></div>
+                        <h4>Garden View Room</h4>
+                        <div class="room-features">
+                            <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                            <span><i class="fas fa-tv"></i> Smart TV</span>
+                            <span><i class="fas fa-coffee"></i> Breakfast</span>
+                        </div>
+                        <a href="#contact" class="btn-secondary">Book Now</a>
+                    </div>
+                </div>
+
+                <div class="room-card reveal">
+                    <div class="room-img">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop" alt="Deluxe Room">
+                    </div>
+                    <div class="room-content">
+                        <div class="room-price">Ksh 14,500 <span>/ night</span></div>
+                        <h4>Deluxe Pool Suite</h4>
+                        <div class="room-features">
+                            <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                            <span><i class="fas fa-tv"></i> Smart TV</span>
+                            <span><i class="fas fa-coffee"></i> Breakfast</span>
+                        </div>
+                        <a href="#contact" class="btn-secondary">Book Now</a>
+                    </div>
+                </div>
+
+                <div class="room-card reveal">
+                    <div class="room-img">
+                        <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=2070&auto=format&fit=crop" alt="Executive Suite">
+                    </div>
+                    <div class="room-content">
+                        <div class="room-price">Ksh 22,000 <span>/ night</span></div>
+                        <h4>Executive VIP Suite</h4>
+                        <div class="room-features">
+                            <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                            <span><i class="fas fa-tv"></i> Smart TV</span>
+                            <span><i class="fas fa-coffee"></i> Breakfast</span>
+                        </div>
+                        <a href="#contact" class="btn-secondary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / CONTACT SECTION -->
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2 class="reveal">Ready for Your Escape?</h2>
+            <p class="reveal">Book your stay today and experience the tranquility of Zion Gardens Resort.</p>
+            <a href="tel:0798628609" class="btn-primary reveal" style="background: var(--clr-accent); border-color: var(--clr-accent);">Call to Reserve</a>
+            
+            <div class="contact-info reveal">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Forest Road, Soy - Eldoret, Kenya</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <a href="tel:0798628609" style="color:white; text-decoration:none;">0798 628609</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:gardenszion@gmail.com" style="color:white; text-decoration:none;">gardenszion@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">Zion <span>Gardens</span></div>
+                    <p class="footer-text">A premier garden resort offering grounds for your events and VIP accommodation in Kakamega County, Soy.</p>
+                    <div class="socials">
+                        <a href="https://www.instagram.com/ziongardens_soy/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100083000290729" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="tel:0798628609"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#amenities">Services</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#rooms">Accommodation</a></li>
+                        <li><a href="#amenities">Events & Conferences</a></li>
+                        <li><a href="#amenities">Restaurant</a></li>
+                        <li><a href="#amenities">Swimming Pool</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zion Gardens Resort Soy. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // =========================================
+        // Navbar Scroll Effect
+        // =========================================
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // =========================================
+        // Mobile Menu Toggle
+        // =========================================
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // =========================================
+        // Scroll Reveal Animation
+        // =========================================
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const revealPoint = 150;
+
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - revealPoint) {
+                    el.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load
+        window.addEventListener('load', revealOnScroll);
+    </script>
+
 </body>
 </html>
